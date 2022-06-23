@@ -27,8 +27,7 @@ class Dev(commands.Cog):
     @idea_.command(name='suggest')
     async def idea_suggest(self, ctx, idea_name, *, idea):
         idea_code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
-        dev_category = self.bot.dev_category
-        idea_channel = dev_category.get_channel(988221597586440212)
+        idea_channel = self.bot.get_channel(988221597586440212)
 
         embed = Embed(title=idea_name, description=idea_code)
         embed.add_field(name='Idea code:', value=f"`{idea_code}`")
