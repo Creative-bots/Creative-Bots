@@ -11,8 +11,4 @@ bot = commands.Bot(command_prefix='cb ', intents=discord.Intents.all())
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
-@bot.command()
-async def ping(ctx):
-    await ctx.send('pong 🏓')
-
 bot.run(os.environ["DISCORD_TOKEN"])
