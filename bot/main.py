@@ -21,10 +21,11 @@ class Manager(commands.Bot):
             intents=discord.Intents.all()
         )
 
+    # Startup Functions
     async def load_cogs(self):
         print("Loading cogs...")
-        for file in os.listdir('cogs'):
-            if file.endswith('.py'):
+        for file in os.listdir(os.getcwd() + '\\bot\\cogs'):
+            if file.endswith('.py') and file != '__init__.py':
                 await self.load_extension('cogs.' + file[:-3])
                 print(f"Loaded {file}")
 
@@ -34,6 +35,15 @@ class Manager(commands.Bot):
 
     async def on_ready(self):
         print("Manager is ready!")
+
+    # Server and bot properties
+    @property
+    def dev_category(self) -> discord.CategoryChannel:
+        return self.get_channel(988221364886462486)
+
+    @property
+    def guild(self) -> discord.Guild:
+        return self.get_guild(985700466937696288)
 
 
 if __name__ == '__main__':
