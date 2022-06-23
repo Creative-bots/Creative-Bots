@@ -2,6 +2,7 @@ import os
 import discord
 from discord.ext import commands
 import argparse
+import asyncpg
 
 # Add an argument parser to handle production and development mode
 parser = argparse.ArgumentParser(description="Discord bot for the Discord server")
@@ -29,9 +30,15 @@ class Manager(commands.Bot):
                 await self.load_extension('cogs.' + file[:-3])
                 print(f"Loaded {file}")
 
+    async def create_pool(self):
+        self.db = await asyncpg.create_pool(dsn=os.environ.get("DB_DSN"))
+
+        await self.db.execute('CREATE TABLE IF NOT EXISTS ideas (idea_owner_id BIGINT, idea TEXt, idea_name TEXT, idea_code TEXT, status TEXT, idea_message_id BIGINT)')
+
     async def on_connect(self):
         print(f"Connected to Discord as {self.user}")
         await self.load_cogs()
+        await self.create_pool()
 
     async def on_ready(self):
         print("Manager is ready!")
