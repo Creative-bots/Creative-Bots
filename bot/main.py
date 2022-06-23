@@ -24,7 +24,7 @@ class Manager(commands.Bot):
     # Startup Functions
     async def load_cogs(self):
         print("Loading cogs...")
-        for file in os.listdir(os.getcwd() + '\\bot\\cogs'):
+        for file in os.listdir(os.getcwd() + '/bot/cogs'):
             if file.endswith('.py') and file != '__init__.py':
                 await self.load_extension('cogs.' + file[:-3])
                 print(f"Loaded {file}")
