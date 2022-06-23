@@ -44,7 +44,7 @@ class Dev(commands.Cog):
             return await ctx.send('No idea with that code found.')
 
         dev_category = self.bot.dev_category
-        idea_channel = dev_category.get_channel(988221597586440212)
+        idea_channel = self.bot.get_channel(988221597586440212)
         msg = await idea_channel.fetch_message(data[0].get('idea_message_id'))
         if not msg:
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
@@ -66,7 +66,7 @@ class Dev(commands.Cog):
             return await ctx.send('No idea with that code found.')
 
         dev_category = self.bot.dev_category
-        idea_channel = dev_category.get_channel(988221597586440212)
+        idea_channel = self.bot.get_channel(988221597586440212)
         msg = await idea_channel.fetch_message(data[0].get('idea_message_id'))
         if not msg:
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
