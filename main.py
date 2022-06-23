@@ -5,7 +5,7 @@ from discord.ext import commands
 bot = commands.Bot(command_prefix='cb ', intents=discord.Intents.all())
 
 async def load_cogs(bot):
-    for file in os.listdir('.cogs'):
+    for file in os.listdir('cogs'):
         if file.endswith('.py'):
             await bot.load_extension(file)
 
