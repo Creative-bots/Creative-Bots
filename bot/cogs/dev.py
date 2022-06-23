@@ -97,7 +97,7 @@ class Dev(commands.Cog):
         idea_name = data[0].get('idea_name')
         idea = data[0].get('idea')
         status = data[0].get('status')
-        if status == 'created':
+        if status == 'made':
             return await ctx.send(f"Idea with code (`{idea_code}`) has already been created")
         elif status != 'approved':
             return await ctx.send(f"Idea with code (`{idea_code}`) is not approved")
@@ -121,7 +121,8 @@ class Dev(commands.Cog):
 
         await ctx.send(embed=success_embed)
         idea_embed = Embed(
-            title=f"Idea \"{idea}\""
+            title=f"Idea \"{idea_name}\"",
+            description=idea
         )
         idea_embed.add_field(
             name="Idea Code:",
