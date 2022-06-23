@@ -35,7 +35,7 @@ class Dev(commands.Cog):
 
         msg = await idea_channel.send(embed=embed)
 
-        await self.bot.db.execute('INSERT INTO ideas(idea, idea_name, idea_code, idea_message_id) VALUES ($1, $2, $3, $4)', idea, idea_name, idea_code, msg.id)
+        await self.bot.db.execute('INSERT INTO ideas(idea, idea_name, idea_code, idea_message_id, status) VALUES ($1, $2, $3, $4, $5)', idea, idea_name, idea_code, msg.id, "waiting")
 
     @idea_.command('approve')
     async def idea_approve(self, ctx, idea_code):
