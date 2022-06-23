@@ -97,9 +97,10 @@ class Dev(commands.Cog):
         idea_name = data[0].get('idea_name')
         idea = data[0].get('idea')
         status = data[0].get('status')
-        if status == 'made':
+        if idea_name in [c.name for c in self.bot.guild.text_channels]:
             return await ctx.send(f"Idea with code (`{idea_code}`) has already been created")
-        elif status != 'approved':
+
+        if status != 'approved':
             return await ctx.send(f"Idea with code (`{idea_code}`) is not approved")
 
         role = await ctx.guild.create_role(name=idea_name)
