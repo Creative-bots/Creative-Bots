@@ -18,7 +18,7 @@ bot = commands.Bot(command_prefix='cb ', intents=discord.Intents.all())
 async def load_cogs(bot):
     for file in os.listdir('cogs'):
         if file.endswith('.py'):
-            await bot.load_extension('cogs/'+file[:-3])
+            await bot.load_extension('cogs.'+file[:-3])
 
 @bot.event
 async def on_ready():
