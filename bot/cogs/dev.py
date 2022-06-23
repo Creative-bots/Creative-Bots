@@ -29,7 +29,7 @@ class Dev(commands.Cog):
         idea_code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
         idea_channel = self.bot.get_channel(988221597586440212)
 
-        embed = Embed(title=idea_name, description=idea_code)
+        embed = Embed(title=idea_name, description=idea)
         embed.add_field(name='Idea code:', value=f"`{idea_code}`")
         embed.default_footer(ctx)
 
