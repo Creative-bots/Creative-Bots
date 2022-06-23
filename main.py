@@ -10,19 +10,32 @@ args = parser.parse_args()
 
 if args.dev:
     import dotenv
+
     dotenv.load_dotenv()
-    
 
-bot = commands.Bot(command_prefix='cb ', intents=discord.Intents.all())
 
-async def load_cogs(bot):
-    for file in os.listdir('cogs'):
-        if file.endswith('.py'):
-            await bot.load_extension('cogs.'+file[:-3])
+class Manager(commands.Bot):
+    def __init__(self):
+        super().__init__(
+            command_prefix='cb ',
+            intents=discord.Intents.all()
+        )
 
-@bot.event
-async def on_ready():
-    await load_cogs(bot)
-    print(f"Logged in as {bot.user}")
+    async def load_cogs(self):
+        print("Loading cogs...")
+        for file in os.listdir('cogs'):
+            if file.endswith('.py'):
+                await self.load_extension('cogs.' + file[:-3])
+                print(f"Loaded {file}")
 
-bot.run(os.environ.get("DISCORD_TOKEN"))
+    async def on_connect(self):
+        print(f"Connected to Discord as {self.user}")
+        await self.load_cogs()
+
+    async def on_ready(self):
+        print("Manager is ready!")
+
+
+if __name__ == '__main__':
+    bot = Manager()
+    bot.run(os.environ.get("DISCORD_TOKEN"))
