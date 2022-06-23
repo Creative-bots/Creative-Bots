@@ -1,5 +1,3 @@
-# This example requires the 'message_content' privileged intents
-
 import os
 import discord
 from discord.ext import commands
@@ -17,9 +15,14 @@ if args.dev:
 
 bot = commands.Bot(command_prefix='cb ', intents=discord.Intents.all())
 
+async def load_cogs(bot):
+    for file in os.listdir('cogs'):
+        if file.endswith('.py'):
+            await bot.load_extension('cogs/'+file)
 
 @bot.event
 async def on_ready():
+    await load_cogs(bot)
     print(f"Logged in as {bot.user}")
 
 bot.run(os.environ.get("DISCORD_TOKEN"))
