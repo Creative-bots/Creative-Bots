@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 import argparse
 import asyncpg
+from github import Github
 
 # Add an argument parser to handle production and development mode
 parser = argparse.ArgumentParser(description="Discord bot for the Discord server")
@@ -21,6 +22,7 @@ class Manager(commands.Bot):
             command_prefix='cb ',
             intents=discord.Intents.all()
         )
+        self.github = Github(os.environ.get("GITHUB_TOKEN"))
 
     # Startup Functions
     async def load_cogs(self):
