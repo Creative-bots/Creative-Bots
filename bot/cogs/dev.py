@@ -22,7 +22,7 @@ class Dev(commands.Cog):
 
     @commands.group(name='idea')
     async def idea_(self, ctx):
-        pass
+        await ctx.send_help('idea')
 
     @idea_.command(name='suggest')
     async def idea_suggest(self, ctx, idea_name, *, idea):
@@ -38,6 +38,7 @@ class Dev(commands.Cog):
         await self.bot.db.execute('INSERT INTO ideas(idea, idea_name, idea_code, idea_message_id, status) VALUES ($1, $2, $3, $4, $5)', idea, idea_name, idea_code, msg.id, "waiting")
 
     @idea_.command('approve')
+    @commands.is_owner()
     async def idea_approve(self, ctx, idea_code):
         data = await self.bot.db.fetch("SELECT idea_message_id, idea_name, idea FROM ideas WHERE idea_code = $1", idea_code)
         if not data:
@@ -60,6 +61,7 @@ class Dev(commands.Cog):
         await ctx.send("Approved idea\n"+msg.jump_url)
 
     @idea_.command('deny')
+    @commands.is_owner()
     async def idea_deny(self, ctx, idea_code):
         data = await self.bot.db.fetch("SELECT idea_message_id, idea_name, idea FROM ideas WHERE idea_code = $1", idea_code)
         if not data:
@@ -163,6 +165,61 @@ class Dev(commands.Cog):
         embed.default_footer(ctx)
         await ctx.send(embed=embed)
 
+    @idea_.command(name='close')
+    async def idea_close(self, ctx, idea_code):
+        data = await self.bot.db.fetch("SELECT idea_name, status FROM ideas WHERE idea_code = $1", idea_code)
+        if not data:
+            return await ctx.send('No idea with that code found.')
+
+        idea_name = data[0].get('idea_name')
+
+        channel = discord.utils.find(ctx.guild.text_channel, name=idea_name)
+        role = discord.utils.find(ctx.guild.roles, name=idea_name)
+
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            role: discord.PermissionOverwrite(read_messages=True),
+            role: discord.PermissionOverwrite(send_messages=False),
+        }
+
+        await channel.edit(overwrites=overwrites, category=self.bot.archive_category)
+
+        success_embed = Success(
+            title=f"Idea Successfully Closed",
+            description=f"{channel.mention} has been closed."
+        )
+
+        success_embed.default_footer(ctx)
+
+        await ctx.send(embed=success_embed)
+
+    @idea_.command(name='open')
+    async def idea_open(self, ctx, idea_code):
+        data = await self.bot.db.fetch("SELECT idea_name, status FROM ideas WHERE idea_code = $1", idea_code)
+        if not data:
+            return await ctx.send('No idea with that code found.')
+
+        idea_name = data[0].get('idea_name')
+
+        channel = discord.utils.find(ctx.guild.text_channel, name=idea_name)
+        role = discord.utils.find(ctx.guild.roles, name=idea_name)
+
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            role: discord.PermissionOverwrite(read_messages=True),
+            role: discord.PermissionOverwrite(send_messages=True),
+        }
+
+        await channel.edit(overwrites=overwrites, category=self.bot.dev_category)
+
+        success_embed = Success(
+            title=f"Idea Successfully Opened",
+            description=f"{channel.mention} has been opened."
+        )
+
+        success_embed.default_footer(ctx)
+
+        await ctx.send(embed=success_embed)
 
 async def setup(bot):
     await bot.add_cog(Dev(bot))
