@@ -20,7 +20,7 @@ class Dev(commands.Cog):
         role = ctx.guild.get_role(988221429608767499)
         return (await self.bot.is_owner(ctx.author)) or role in ctx.author.roles
 
-    @commands.group(name='idea')
+    @commands.group(name='idea', invoke_without_command=True)
     async def idea_(self, ctx):
         await ctx.send_help('idea')
 
@@ -173,7 +173,7 @@ class Dev(commands.Cog):
 
         idea_name = data[0].get('idea_name')
 
-        channel = discord.utils.find(ctx.guild.text_channel, name=idea_name)
+        channel = discord.utils.find(ctx.guild.text_channels, name=idea_name)
         role = discord.utils.find(ctx.guild.roles, name=idea_name)
 
         overwrites = {
@@ -201,7 +201,7 @@ class Dev(commands.Cog):
 
         idea_name = data[0].get('idea_name')
 
-        channel = discord.utils.find(ctx.guild.text_channel, name=idea_name)
+        channel = discord.utils.find(ctx.guild.text_channels, name=idea_name)
         role = discord.utils.find(ctx.guild.roles, name=idea_name)
 
         overwrites = {
