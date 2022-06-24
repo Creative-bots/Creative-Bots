@@ -49,6 +49,10 @@ class Manager(commands.Bot):
         return self.get_channel(988221364886462486)
 
     @property
+    def archive_category(self) -> discord.CategoryChannel:
+        return self.get_channel(989723651714736189)
+
+    @property
     def guild(self) -> discord.Guild:
         return self.get_guild(985700466937696288)
 
