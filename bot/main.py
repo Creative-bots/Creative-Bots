@@ -32,6 +32,11 @@ class Manager(commands.Bot):
                 await self.load_extension('cogs.' + file[:-3])
                 print(f"Loaded {file}")
 
+        os.environ.setdefault("JISHAKU_NO_UNDERSCORE", "1") 
+        os.environ.setdefault("JISHAKU_HIDE", "1")
+        await self.load_extension('jishaku')
+        print("Loaded jiskau")
+
     async def create_pool(self):
         self.db = await asyncpg.create_pool(dsn=os.environ.get("DB_DSN"))
 
