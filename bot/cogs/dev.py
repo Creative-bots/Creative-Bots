@@ -172,9 +172,10 @@ class Dev(commands.Cog):
             return await ctx.send('No idea with that code found.')
 
         idea_name = data[0].get('idea_name')
-
-        channel = discord.utils.get(ctx.guild.text_channels, name=idea_name)
         role = discord.utils.get(ctx.guild.roles, name=idea_name)
+
+        idea_name = ('-'.join(idea_name.split())).lower()
+        channel = discord.utils.get(ctx.guild.text_channels, name=idea_name)
 
         overwrites = {
             ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
@@ -200,9 +201,10 @@ class Dev(commands.Cog):
             return await ctx.send('No idea with that code found.')
 
         idea_name = data[0].get('idea_name')
-
-        channel = discord.utils.get(ctx.guild.text_channels, name=idea_name)
         role = discord.utils.get(ctx.guild.roles, name=idea_name)
+
+        idea_name = ('-'.join(idea_name.split())).lower()
+        channel = discord.utils.get(ctx.guild.text_channels, name=idea_name)
 
         overwrites = {
             ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
