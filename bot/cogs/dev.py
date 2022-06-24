@@ -97,10 +97,9 @@ class Dev(commands.Cog):
         idea_name = data[0].get('idea_name')
         idea = data[0].get('idea')
         status = data[0].get('status')
-        if idea_name in [c.name for c in self.bot.guild.text_channels]:
+        if status == 'made':
             return await ctx.send(f"Idea with code (`{idea_code}`) has already been created")
-
-        if status != 'approved':
+        elif status != 'approved':
             return await ctx.send(f"Idea with code (`{idea_code}`) is not approved")
 
         role = await ctx.guild.create_role(name=idea_name)
@@ -158,7 +157,7 @@ class Dev(commands.Cog):
             embed = Error(title="Failed to Join Idea", description=f"{member.mention} is already in idea with code (`{idea_code}`)")
             return await ctx.send(embed=embed)
 
-        await ctx.author.add_roles(role)
+        await member.add_roles(role)
 
         embed = Success(title="Idea Joined", description=f"{member.mention} has successfully joined idea with code (`{idea_code}`)")
         embed.default_footer(ctx)
