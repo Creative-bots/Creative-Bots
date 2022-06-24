@@ -134,7 +134,8 @@ class Dev(commands.Cog):
 
         await channel.send(embed=idea_embed)
 
-        await self.bot.db.execute("UPDATE ideas SET status = $1 AND idea_owner_id = $2 WHERE idea_code = $3", "made", ctx.author.id, idea_code)
+        await self.bot.db.execute("UPDATE ideas SET status = $1 WHERE idea_code = $2", "made", idea_code)
+        await self.bot.db.execute("UPDATE ideas SET idea_owner_id = $1 WHERE idea_code = $2", ctx.author.id, idea_code)
 
     @idea_.command(name='join')
     async def idea_join(self, ctx, member: discord.Member, idea_code) -> discord.Message | None:
