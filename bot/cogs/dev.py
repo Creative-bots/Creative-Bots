@@ -138,13 +138,13 @@ class Dev(commands.Cog):
         with open(os.path.join('bot', 'template_repo.json'), "r") as f:
             repo_template = json.load(f)
 
-        data = await self.bot.db.fetch('SELECT github_name FROM github_names WHERE user_id = $1', ctx.author.id)
+        data = await self.bot.db.fetch('SELECT name FROM config WHERE user_id = $1 AND type = $2', ctx.author.id, 'github_name')
 
         org = self.bot.github.get_organization("Creative-bots")
         repo = org.create_repo(idea_name, private=bool(data))
 
         if data:
-            repo.add_to_collaborators(data[0].get('github_name'), 'admin')
+            repo.add_to_collaborators(data[0].get('name'), 'admin')
 
         for file_name, file_content in repo_template['python'].items():
             file_content = file_content.replace(r'\n','\n').replace(r'\t', '    ')

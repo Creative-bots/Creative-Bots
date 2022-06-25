@@ -32,11 +32,11 @@ class Misc(commands.Cog):
         except github.UnknownObjectException:
             return await ctx.send("Invalid github name")
 
-        data = await self.bot.db.fetch('SELECT github_name FROM github_names WHERE user_id = $1', ctx.author.id)
+        data = await self.bot.db.fetch('SELECT name FROM config WHERE user_id = $1 AND type = $2', ctx.author.id, 'github_name')
         if data:
-            await self.bot.db.execute("UPDATE github_names SET github_name = $1 WHERE user_id = $2", github_name, ctx.author.id)
+            await self.bot.db.execute("UPDATE config SET name = $1 WHERE user_id = $2 AND type = $3", github_name, ctx.author.id, 'github_name')
         else:
-            await self.bot.db.execute("INSERT INTO github_names (github_name, user_id) VALUES ($1, $2)", github_name, ctx.author.id)
+            await self.bot.db.execute("INSERT INTO github_names (name, user_id, type) VALUES ($1, $2, $3)", github_name, ctx.author.id, 'github_name')
         await ctx.send("Done!")
 
 async def setup(bot: commands.Bot):
