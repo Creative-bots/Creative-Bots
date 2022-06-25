@@ -5,7 +5,6 @@ import argparse
 import asyncpg
 from github import Github
 
-
 # Add an argument parser to handle production and development mode
 parser = argparse.ArgumentParser(description="Discord bot for the Discord server")
 parser.add_argument("--dev", action="store_true", help="Run the bot in development mode")
