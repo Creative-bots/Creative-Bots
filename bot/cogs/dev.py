@@ -119,7 +119,7 @@ class Dev(commands.Cog):
         with open(os.path.join('bot', 'template_repo.json'), "r") as f:
             repo_template = json.load(f)
 
-        org = self.github.get_organization("Creative-bots")
+        org = self.bot.github.get_organization("Creative-bots")
         repo = org.create_repo(idea_name)
         for file_name, file_content in repo_template['python'].items():
             file_content = file_content.replace(r'\n','\n')
