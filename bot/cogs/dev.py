@@ -7,6 +7,7 @@ import discord
 from discord.ext import commands
 import typing
 import json
+import os
 from bot.helpers.embeds import Success, Error, ManagerEmbed as Embed
 
 if typing.TYPE_CHECKING:
