@@ -130,7 +130,7 @@ class Dev(commands.Cog):
         wb = await channel.create_webhook(name='Github webhook')
         events = ["push", "pull_request"]
         config = {
-            "url": wb.url+'\github'
+            "url": wb.url+'\github',
             "content_type": "json"
         }
         repo.create_hook("web", config, events, active=True)
