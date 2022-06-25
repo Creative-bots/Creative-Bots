@@ -41,6 +41,7 @@ class Manager(commands.Bot):
 		self.db = await asyncpg.create_pool(dsn=os.environ.get("DB_DSN"))
 
 		await self.db.execute('CREATE TABLE IF NOT EXISTS ideas (idea_owner_id BIGINT, idea TEXt, idea_name TEXT, idea_code TEXT, status TEXT, idea_message_id BIGINT)')
+		await self.db.execute('CREATE TABLE IF NOT EXISTS github_names (user_id BIGINT, github_name TEXT)')
 
 	async def on_connect(self):
 		print(f"Connected to Discord as {self.user}")

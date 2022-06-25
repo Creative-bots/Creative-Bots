@@ -56,7 +56,7 @@ class Dev(commands.Cog):
             except discord.Forbidden:
                 pass
 
-        msg = await idea_channel.fetch_message()
+        msg = await idea_channel.fetch_message(data[0].get('idea_message_id'))
         if not msg:
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
             return await ctx.send("No idea with that code found.")
@@ -114,7 +114,7 @@ class Dev(commands.Cog):
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
             return await ctx.send("No idea with that code found.")
         embed = msg.embeds[0]
-        embed.add_field(name=f'Idea created', value=f'By {ctx.author.mention}')
+        embed.add_field(name=f'Idea created', value=f'By {ctx.author.mention}', inline=False)
         await msg.edit(embed=embed)
 
         idea_name = data[0].get('idea_name')
@@ -138,16 +138,22 @@ class Dev(commands.Cog):
         with open(os.path.join('bot', 'template_repo.json'), "r") as f:
             repo_template = json.load(f)
 
+        data = await self.bot.db.fetch('SELECT github_name FROM github_names WHERE user_id = $1', ctx.author.id)
+
         org = self.bot.github.get_organization("Creative-bots")
-        repo = org.create_repo(idea_name)
+        repo = org.create_repo(idea_name, private=bool(data))
+
+        if data:
+            repo.add_to_collaborators(data[0].get('github_name'), 'admin')
+
         for file_name, file_content in repo_template['python'].items():
-            file_content = file_content.replace(r'\n','\n').replace(r'\t', '\t')
+            file_content = file_content.replace(r'\n','\n').replace(r'\t', '    ')
             if file_name == 'README.md':
                 file_content = file_content.format(idea_name, idea)
             repo.create_file(file_name, 'main commit', file_content, branch='main')
 
         wb = await channel.create_webhook(name='Github webhook')
-        events = ["push", "pull_request"]
+        events = ["push", "pull_request", "forks", "issues", "stars"]
         config = {
             "url": wb.url+'/github',
             "content_type": "json"
