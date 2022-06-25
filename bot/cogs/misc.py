@@ -28,7 +28,7 @@ class Misc(commands.Cog):
     @set_.command(name='github_name', aliases=['githubname'])
     async def set_github_name(self, ctx, github_name):
         try:
-            user = g.get_user(github_name)
+            user = self.bot.github.get_user(github_name)
         except github.UnknownObjectException:
             return await ctx.send("Invalid github name")
 
