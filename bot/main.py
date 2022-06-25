@@ -31,7 +31,7 @@ class Manager(commands.Bot):
                 try:
                     await self.load_extension('cogs.' + file[:-3])
                     print(f"Loaded cogs.{file}")
-                except discord.ExtensionFailed:
+                except commands.ExtensionFailed:
                     print(f"Did not load cogs.{file}")
 
         os.environ.setdefault("JISHAKU_NO_UNDERSCORE", "1") 
