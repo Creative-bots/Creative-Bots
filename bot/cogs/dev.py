@@ -153,7 +153,7 @@ class Dev(commands.Cog):
             repo.create_file(file_name, 'main commit', file_content, branch='main')
 
         wb = await channel.create_webhook(name='Github webhook')
-        events = ["push", "pull_request", "forks", "issues", "stars"]
+        events = ["push", "pull_request", "issues"]
         config = {
             "url": wb.url+'/github',
             "content_type": "json"
