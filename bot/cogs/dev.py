@@ -122,7 +122,7 @@ class Dev(commands.Cog):
         repo = org.create_repo(idea_name)
         for file_name, file_content in repo_template['python'].items():
             file_content = file_content.replace(r'\n','\n')
-            if file_name = 'README.md':
+            if file_name == 'README.md':
                 file_content = file_content.format(idea_name, idea)
             repo.create_file(file_name, 'main commit', file_content, branch='main')
 
