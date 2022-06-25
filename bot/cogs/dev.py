@@ -115,7 +115,7 @@ class Dev(commands.Cog):
 
         channel = await dev_category.create_text_channel(idea_name, topic=idea_code, overwrites=overwrites)
 
-        with open('template_json.json', "r") as f:
+        with open('bot/template_json.json', "r") as f:
             repo_template = json.load(f)
 
         org = self.github.get_organization("Creative-bots")
