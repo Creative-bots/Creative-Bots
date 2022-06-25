@@ -28,8 +28,8 @@ class Manager(commands.Bot):
         print("Loading cogs...")
         for file in os.listdir(os.getcwd() + '/bot/cogs'):
             if file.endswith('.py') and file != '__init__.py':
-                await self.load_extension('cogs.' + file[:-3])
                 print(f"Loaded {file}")
+                await self.load_extension('cogs.' + file[:-3])
 
         os.environ.setdefault("JISHAKU_NO_UNDERSCORE", "1") 
         os.environ.setdefault("JISHAKU_HIDE", "1")
@@ -44,8 +44,8 @@ class Manager(commands.Bot):
 
     async def on_connect(self):
         print(f"Connected to Discord as {self.user}")
-        await self.load_cogs()
         await self.create_pool()
+        await self.load_cogs()
 
     async def on_ready(self):
         print("Manager is ready!")
