@@ -1,0 +1,7 @@
+{
+	"python": {
+		"README.md": "# {}\n- {}\n# Notes\n - This is a simple discord bot made by Creative Bots™️ with prefix `!`",
+		"requirements.txt": "git+https://github.com/Rapptz/discord.py",
+		"main.py":"import os\nimport discord\nfrom discord.ext import commands\n\nbot =  commands.Bot(command_prefix='!', intents=discord.Intents.all())\n\nasync def load_cogs():\n\rprint('Loading cogs...')\n\rfor file in os.listdir(os.getcwd() + '/cogs'):\n\r\rif file.endswith('.py') and file != '__init__.py':\n\r\r\rawait bot.load_extension('cogs.' + file[:-3])\n\r\r\rprint(f'Loaded {file}')\n\n\n@bot.command()\nasync def ping(ctx):\n\rawait ctx.send(f'Pong! 🏓 {bot.latency * 1000}')\n\n@bot.event\nasync def on_ready():\n\rawait load_cogs()\n\rprint(f'Connected to Discord as {bot.user}')\n\nbot.run(os.environ.get('DISCORD_TOKEN'))"
+	}
+}

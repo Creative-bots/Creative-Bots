@@ -6,6 +6,7 @@ import string
 import discord
 from discord.ext import commands
 import typing
+import json
 from bot.helpers.embeds import Success, Error, ManagerEmbed as Embed
 
 if typing.TYPE_CHECKING:
@@ -113,6 +114,16 @@ class Dev(commands.Cog):
         }
 
         channel = await dev_category.create_text_channel(idea_name, topic=idea_code, overwrites=overwrites)
+
+        with open('template_json.json', "r") as f:
+            repo_template = json.load(f)
+
+        org = self.github.get_organization("Creative-bots")
+        repo = org.create_repo(idea_name)
+        for file_name, file_content in repo_template['python'].items():
+            print(file_name, file_content)
+            # repo.create_file(file_name, 'main commit', file_content, branch='main')
+
 
         success_embed = Success(
             title=f"Idea Successfully Created",
