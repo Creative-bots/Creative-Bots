@@ -37,18 +37,26 @@ class Dev(commands.Cog):
 
         msg = await idea_channel.send(embed=embed)
 
-        await self.bot.db.execute('INSERT INTO ideas(idea, idea_name, idea_code, idea_message_id, status) VALUES ($1, $2, $3, $4, $5)', idea, idea_name, idea_code, msg.id, "waiting")
+        await self.bot.db.execute('INSERT INTO ideas(idea, idea_name, idea_code, idea_message_id, status, idea_owner_id) VALUES ($1, $2, $3, $4, $5, $6)', idea, idea_name, idea_code, msg.id, "waiting", ctx.author.id)
 
     @idea_.command('approve')
     @commands.is_owner()
     async def idea_approve(self, ctx, idea_code):
-        data = await self.bot.db.fetch("SELECT idea_message_id, idea_name, idea FROM ideas WHERE idea_code = $1", idea_code)
+        data = await self.bot.db.fetch("SELECT idea_message_id, idea_name, idea, idea_owner_id FROM ideas WHERE idea_code = $1", idea_code)
         if not data:
             return await ctx.send('No idea with that code found.')
 
         dev_category = self.bot.dev_category
         idea_channel = self.bot.get_channel(988221597586440212)
-        msg = await idea_channel.fetch_message(data[0].get('idea_message_id'))
+        idea_owner_id = data[0].get('idea_owner_id')
+        member = ctx.guild.get_member(idea_owner_id) or await ctx.guild.fetch_member(idea_owner_id)
+        if member:
+            try:
+                await member.send(f"Your idea with code: `{idea_code}`\nhas been approved")
+            except discord.Forbidden:
+                pass
+
+        msg = await idea_channel.fetch_message()
         if not msg:
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
             return await ctx.send("No idea with that code found.")
@@ -65,12 +73,20 @@ class Dev(commands.Cog):
     @idea_.command('deny')
     @commands.is_owner()
     async def idea_deny(self, ctx, idea_code):
-        data = await self.bot.db.fetch("SELECT idea_message_id, idea_name, idea FROM ideas WHERE idea_code = $1", idea_code)
+        data = await self.bot.db.fetch("SELECT idea_message_id, idea_name, idea, idea_owner_id FROM ideas WHERE idea_code = $1", idea_code)
         if not data:
             return await ctx.send('No idea with that code found.')
 
         dev_category = self.bot.dev_category
         idea_channel = self.bot.get_channel(988221597586440212)
+        idea_owner_id = data[0].get('idea_owner_id')
+        member = ctx.guild.get_member(idea_owner_id) or await ctx.guild.fetch_member(idea_owner_id)
+        if member:
+            try:
+                await member.send(f"Your idea with code: `{idea_code}`\nhas been approved")
+            except discord.Forbidden:
+                pass
+
         msg = await idea_channel.fetch_message(data[0].get('idea_message_id'))
         if not msg:
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
@@ -97,13 +113,16 @@ class Dev(commands.Cog):
         if not msg:
             await self.bot.db.execute('DELETE FROM ideas WHERE idea_code = $1', idea_code)
             return await ctx.send("No idea with that code found.")
+        embed = msg.embeds[0]
+        embed.add_field(name=f'Idea created', value=f'By {ctx.author.mention}')
+        await msg.edit(embed=embed)
 
         idea_name = data[0].get('idea_name')
         idea = data[0].get('idea')
         status = data[0].get('status')
         if status == 'made':
             return await ctx.send(f"Idea with code (`{idea_code}`) has already been created")
-        elif status != 'approved':
+        elif status != 'approved' and not (await self.bot.is_owner(ctx.author)):
             return await ctx.send(f"Idea with code (`{idea_code}`) is not approved")
 
         role = await ctx.guild.create_role(name=idea_name)
@@ -130,7 +149,7 @@ class Dev(commands.Cog):
         wb = await channel.create_webhook(name='Github webhook')
         events = ["push", "pull_request"]
         config = {
-            "url": wb.url+'\github',
+            "url": wb.url+'/github',
             "content_type": "json"
         }
         repo.create_hook("web", config, events, active=True)
