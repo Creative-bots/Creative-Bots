@@ -115,14 +115,16 @@ class Dev(commands.Cog):
 
         channel = await dev_category.create_text_channel(idea_name, topic=idea_code, overwrites=overwrites)
 
-        with open('bot/template_json.json', "r") as f:
+        with open(os.path.join('bot', 'template_repo.json'), "r") as f:
             repo_template = json.load(f)
 
         org = self.github.get_organization("Creative-bots")
         repo = org.create_repo(idea_name)
         for file_name, file_content in repo_template['python'].items():
-            print(file_name, file_content)
-            # repo.create_file(file_name, 'main commit', file_content, branch='main')
+            file_content = file_content.replace(r'\n','\n')
+            if file_name = 'README.md':
+                file_content = file_content.format(idea_name, idea)
+            repo.create_file(file_name, 'main commit', file_content, branch='main')
 
 
         success_embed = Success(
@@ -145,6 +147,7 @@ class Dev(commands.Cog):
         idea_embed.default_footer(ctx, text="Idea created by {}")
 
         await channel.send(embed=idea_embed)
+        await channel.send(f"https://github.com/Creative-bots/{idea_name.replace(' ', '-')}")
 
         await self.bot.db.execute("UPDATE ideas SET status = $1 WHERE idea_code = $2", "made", idea_code)
         await self.bot.db.execute("UPDATE ideas SET idea_owner_id = $1 WHERE idea_code = $2", ctx.author.id, idea_code)
