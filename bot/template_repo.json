@@ -6,7 +6,7 @@
 	},
 
 	"javascript": {
-		"package.json": "{\n  'type': 'module',\n  'dependencies': {\n    'discord.js': '^14.0.0-dev.1654862727-0415300'\n  },\n  'name': 'desktop',\n  'version': '1.0.0',\n  'main': 'index.js',\n  'devDependencies': {},\n  'scripts': {\n    'test': 'echo \"Error: no test specified\" && exit 1'\n  },\n  'keywords': [],\n  'author': '',\n  'license': 'ISC',\n  'description': ''\n}",
+		"package.json": "{\n  'type': 'module',\n  'dependencies': {\n    'discord.js': '^14.0.0-dev.1654862727-0415300'\n  },\n  'name': 'desktop',\n  'version': '1.0.0',\n  'main': 'index.js',\n  'devDependencies': {},\n  'scripts': {\n    'test': 'echo \'Error: no test specified\' && exit 1'\n  },\n  'keywords': [],\n  'author': '',\n  'license': 'ISC',\n  'description': ''\n}",
 		"README.md": "# {}\n- {}\n# Language\n- Javascript/discord.js\n# Notes\n- This is a simple discord bot made by Creative Bots™️ with prefix `!`",
 		"index.js":"const discord = require('discord.js')\n\nconst client = new discord.Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent'] })\nclient.PREFIX = '!'\n\nclient.on('ready',()=>{\n    console.log(`Connected to Discord as ${client.user.username}`)\n})\n\nclient.on('messageCreate', message=>{\n    const [cmd,...args] = message.content.slice(client.PREFIX.length).split(/ +/g)\n\n    if(cmd == 'ping'){\n        message.reply(`Pong! 🏓 ${client.ws.ping}`)\n    }\n})\n\nclient.login('your token')"
 	}
