@@ -146,8 +146,13 @@ class Dev(commands.Cog):
         if data:
             repo.add_to_collaborators(data[0].get('name'), 'admin')
 
-        for file_name, file_content in repo_template['python'].items():
-            file_content = file_content.replace(r'\n','\n').replace(r'\t', '    ')
+        data = await self.bot.db.fetch('SELECT name FROM config WHERE user_id = $1 AND type = $2', ctx.author.id, 'preferred_language')
+        if not data:
+            lang = 'python'
+        else:
+            lang = data[0].get('preferred_language')
+        for file_name, file_content in repo_template[lang].items():
+            file_content = file_content.replace(r'\n','\n').replace(r'\t', '    ').replace("'",'"')
             if file_name == 'README.md':
                 file_content = file_content.format(idea_name, idea)
             repo.create_file(file_name, 'main commit', file_content, branch='main')

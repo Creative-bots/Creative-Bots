@@ -2,6 +2,12 @@
 	"python": {
 		"README.md": "# {}\n- {}\n# Language\n- Python/discord.py\n# Notes\n- This is a simple discord bot made by Creative Bots™️ with prefix `!`",
 		"requirements.txt": "git+https://github.com/Rapptz/discord.py",
-		"main.py":"import os\nimport discord\nfrom discord.ext import commands\n\nbot =  commands.Bot(command_prefix='!', intents=discord.Intents.all())\n\nasync def load_cogs():\n\tprint('Loading cogs...')\n\tfor file in os.listdir(os.getcwd() + '/cogs'):\n\t\tif file.endswith('.py') and file != '__init__.py':\n\t\t\tawait bot.load_extension('cogs.' + file[:-3])\n\t\t\tprint(f'Loaded {file}')\n\n\n@bot.command()\nasync def ping(ctx):\n\tawait ctx.send(f'Pong! 🏓 {bot.latency * 1000}')\n\n@bot.event\nasync def on_ready():\n\tawait load_cogs()\n\tprint(f'Connected to Discord as {bot.user}')\n\nbot.run(os.environ.get('DISCORD_TOKEN'))"
+		"main.py":"import os\nimport discord\nfrom discord.ext import commands\n\nbot =  commands.Bot(command_prefix='!', intents=discord.Intents.all())\n\nasync def load_cogs():\n    print('Loading cogs...')\n    for file in os.listdir(os.getcwd() + '/cogs'):\n        if file.endswith('.py') and file != '__init__.py':\n            await bot.load_extension('cogs.' + file[:-3])\n            print(f'Loaded {file}')\n\n\n@bot.command()\nasync def ping(ctx):\n    await ctx.send(f'Pong! 🏓 {bot.latency * 1000}')\n\n@bot.event\nasync def on_ready():\n    await load_cogs()\n    print(f'Connected to Discord as {bot.user}')\n\nbot.run(os.environ.get('DISCORD_TOKEN'))"
+	},
+
+	"javascript": {
+		"package.json": "{\n  'type': 'module',\n  'dependencies': {\n    'discord.js': '^14.0.0-dev.1654862727-0415300'\n  },\n  'name': 'desktop',\n  'version': '1.0.0',\n  'main': 'index.js',\n  'devDependencies': {},\n  'scripts': {\n    'test': 'echo \"Error: no test specified\" && exit 1'\n  },\n  'keywords': [],\n  'author': '',\n  'license': 'ISC',\n  'description': ''\n}",
+		"README.md": "# {}\n- {}\n# Language\n- Javascript/discord.js\n# Notes\n- This is a simple discord bot made by Creative Bots™️ with prefix `!`",
+		"index.js":"const discord = require('discord.js')\n\nconst client = new discord.Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent'] })\nclient.PREFIX = '!'\n\nclient.on('ready',()=>{\n    console.log(`Connected to Discord as ${client.user.username}`)\n})\n\nclient.on('messageCreate', message=>{\n    const [cmd,...args] = message.content.slice(client.PREFIX.length).split(/ +/g)\n\n    if(cmd == 'ping'){\n        message.reply(`Pong! 🏓 ${client.ws.ping}`)\n    }\n})\n\nclient.login('your token')"
 	}
 }
