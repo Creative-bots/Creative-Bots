@@ -150,7 +150,7 @@ class Dev(commands.Cog):
         if not data:
             lang = 'python'
         else:
-            lang = data[0].get('preferred_language')
+            lang = data[0].get('name')
         for file_name, file_content in repo_template[lang].items():
             file_content = file_content.replace(r'\n','\n').replace(r'\t', '    ').replace("'",'"')
             if file_name == 'README.md':
